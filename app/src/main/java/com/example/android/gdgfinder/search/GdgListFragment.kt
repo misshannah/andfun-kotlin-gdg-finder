@@ -15,6 +15,7 @@ import com.example.android.gdgfinder.databinding.FragmentGdgListBinding
 import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
 import com.example.android.gdgfinder.R
+import com.google.android.material.chip.Chip
 
 private const val LOCATION_PERMISSION_REQUEST = 1
 
@@ -45,7 +46,7 @@ class GdgListFragment : Fragment() {
         // Sets the adapter of the RecyclerView
         binding.gdgChapterList.adapter = adapter
 
-        viewModel.showNeedLocation.observe(viewLifecycleOwner, object: Observer<Boolean> {
+        viewModel.showNeedLocation.observe(viewLifecycleOwner, object : Observer<Boolean> {
             override fun onChanged(show: Boolean?) {
                 // Snackbar is like Toast but it lets us show forever
                 if (show == true) {
@@ -58,21 +59,40 @@ class GdgListFragment : Fragment() {
             }
         })
 
-        // TODO (04) Create an observer on viewModel.regionList. Override the required
-        // onChanged() method to include the following changes.
 
-        // TODO (05) Create a new layoutInflator from the ChipGroup.
+            // DONE (04) Create an observer on viewModel.regionList. Override the required
+            // onChanged() method to include the following changes.
 
-        // TODO (06) Use the map() function to create a Chip for each item in regionList and
-        // return the results as a new list called children.
+            // DONE (05) Create a new layoutInflator from the ChipGroup.
+            viewModel.regionList.observe(viewLifecycleOwner,
+            object : Observer<List<String>> {
+                override fun onChanged(data: List<String>?) {
+                    data ?: return
+                    val chipGroup = binding.regionList
+                    val inflator = LayoutInflater.from(chipGroup.context)
 
-        // TODO (07) Call chipGroup.removeAllViews() to remove any views already in chipGroup.
+                    val children = data.map { regionName ->
+                        val chip = inflator.inflate(R.layout.region, chipGroup, false) as Chip
+                        chip.text = regionName
+                        chip.tag = regionName
+                        chip.setOnCheckedChangeListener { button, isChecked ->
+                            viewModel.onFilterChanged(button.tag as String, isChecked)
+                        }
+                        chip
+                    }
+                    chipGroup.removeAllViews()
+                    // DONE (07) Call chipGroup.removeAllViews() to remove any views already in chipGroup.
 
-        // TODO (08)  Iterate through the list of children and add each chip to chipGroup.
+                    // DONE (08)  Iterate through the list of children and add each chip to chipGroup.
+                    for (chip in children) {
+                        chipGroup.addView(chip)
+                    }
+                }
+            })
+            setHasOptionsMenu(true)
+            return binding.root
+        }
 
-        setHasOptionsMenu(true)
-        return binding.root
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
