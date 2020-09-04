@@ -10,18 +10,21 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-            <!-- TODO (05) Add a MaterialComponents.Dark.ActionBar theme to the Toolbar, and
+            <!-- DONE (05) Add a MaterialComponents.Dark.ActionBar theme to the Toolbar, and
                  set the background to ?colorPrimaryDark. -->
             <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize">
+                android:background="?attr/colorPrimaryDark"
+                android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+                android:layout_height="?attr/actionBarSize">
                 <ImageView
                         android:id="@+id/hero_image"
                         android:layout_width="150dp"
                         android:layout_height="match_parent"
                         app:srcCompat="@drawable/logo"
-                        android:contentDescription="@string/app_name"/>
+                    android:tint="?colorOnPrimary"
+                    android:contentDescription="@string/app_name"/>
             </androidx.appcompat.widget.Toolbar>
 
             <fragment
